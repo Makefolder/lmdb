@@ -4,10 +4,10 @@
 		title: string;
 	};
 	export let title: string;
-	export let repo: link;
 	export let span: string;
-	export let links: link[];
+	export let repo: link;
 	export let logo: string;
+	export let links: link[];
 </script>
 
 <nav class="px-3">
@@ -19,7 +19,7 @@
 						<img class="object-cover" src={logo} alt="{title}{span}" />
 					</div>
 				{/if}
-				<div class="nav__logo text-[1.75rem] mr-3 font-bold">{title}<span>{span}</span></div>
+				<div class="nav__logo text-[1.75rem] mr-1 font-bold">{title}<span>{span}</span></div>
 			</div>
 		</a>
 		<div>
@@ -46,13 +46,15 @@
 		border-radius: 1rem;
 		border: 1px solid rgba(255, 255, 255, 0.15);
 		background: rgba(var(--color-surface-500) / 0.25);
+		backdrop-filter: blur(10px);
 	}
 	.nav__logo span {
 		color: rgb(var(--color-primary-500));
 	}
 	.nav__button,
 	.logo__link {
-		padding: 0.45rem 0.75rem;
+		margin-left: 0.25rem;
+		padding: 0.35rem 0.65rem;
 		border-radius: 0.75rem;
 		transition: 0.1s ease;
 	}

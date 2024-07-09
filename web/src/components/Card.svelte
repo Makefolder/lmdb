@@ -1,38 +1,61 @@
 <script lang="ts">
-	type movie = {
-		url: string;
-		header: string;
-		title: string;
-		rating: number;
-		genres: string[];
+	import type { Movie } from '../types/movie';
+	let movie: Movie = {
+		url: '/',
+		header: '../../poster.jpg',
+		title: 'none',
+		rating: 0.1,
+		genres: ['none', 'none']
 	};
-	export let movie: movie;
+	let saved = false;
+	export { movie, saved };
 </script>
 
-<div id="myCard" class="my-4 card card-hover overflow-hidden">
+<div id="myCard" class="my-4 card w-[22.1rem] card-hover overflow-hidden">
 	<a href={movie.url}>
-		<div id="cardPoster" class="overflow-hidden h-[32rem] flex justify-center items-center">
-			<img class="object-cover w-full h-full" src={movie.header} alt="favicon" />
-		</div>
-		<div class="p-4">
-			<div class="font-medium hover:text-primary-500 transition">{movie.rating}</div>
-			<h3 class="hover:text-primary-500 transition">{movie.title}</h3>
-			<div class="flex">
-				{#each movie.genres as genre}
-					<div class="pr-2 truncate">
-						<a class="hover:text-primary-500 transition" href="/{genre}">{genre}</a>
+		<div class="h-full overflow-hidden flex flex-col justify-between">
+			<div>
+				<div id="cardPoster" class="overflow-hidden h-[32rem] flex justify-center items-center">
+					<img class="object-cover w-full h-full" src={movie.header} alt="favicon" />
+				</div>
+				<div class="p-4">
+					<div class="w-fit flex items-center font-medium hover:text-primary-500 transition">
+						<div class="w-4 h-4 mr-1">
+							<img src="../../sparkle.png" alt="" />
+						</div>
+						<div>{movie.rating}</div>
 					</div>
-				{/each}
+					<h3 class="w-fit hover:text-primary-500 transition">{movie.title}</h3>
+					<div class="flex flex-wrap">
+						{#each movie.genres as genre}
+							<div class="pr-2 truncate w-fit">
+								<a class="hover:text-primary-500 transition" href="/{genre}">{genre}</a>
+							</div>
+						{/each}
+					</div>
+				</div>
 			</div>
-		</div>
-		<hr class="opacity-50" />
-		<div class="my__card card-footer">
-			<button>+ Додати до плейлісту +</button>
+
+			<div class="overflow-hidden">
+				<hr class="opacity-50 mt-auto" />
+				<div class="my__card card-footer">
+					{#if saved}
+						<button class="saved__card normal-case">Видалити</button>
+					{:else}
+						<button class="normal-case">Додати до плейлісту</button>
+					{/if}
+				</div>
+			</div>
 		</div>
 	</a>
 </div>
 
 <style>
+	#myCard {
+		background: rgba(var(--color-surface-500) / 0.35);
+		backdrop-filter: blur(10px);
+	}
+
 	.card-footer {
 		padding: 1rem;
 	}
@@ -52,5 +75,8 @@
 	}
 	.my__card button:hover {
 		background: rgb(var(--color-primary-500));
+	}
+	.saved__card:hover {
+		background: rgb(var(--color-error-500)) !important;
 	}
 </style>
