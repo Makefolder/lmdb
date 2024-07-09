@@ -1,33 +1,45 @@
 <script lang="ts">
 	import type { Movie } from '../types/movie';
 	let movie: Movie = {
-		url: '/',
-		header: '../../poster.jpg',
-		title: 'none',
-		rating: 0.1,
-		genres: ['none', 'none']
+		id: 0,
+		poster_path: '../../poster.jpg',
+		title: 'тайтл',
+		overview: 'overview',
+		genre_ids: [1, 1, 1],
+		genre_strings: ['none', 'none', 'none'],
+		release_date: 'never',
+		original_title: 'title',
+		original_language: 'en',
+		popularity: 1,
+		vote_average: 1.1,
+		vote_count: 1
 	};
+
 	let saved = false;
 	export { movie, saved };
 </script>
 
 <div id="myCard" class="my-4 card w-[22.1rem] card-hover overflow-hidden">
-	<a href={movie.url}>
+	<a href={movie.original_title}>
 		<div class="h-full overflow-hidden flex flex-col justify-between">
 			<div>
 				<div id="cardPoster" class="overflow-hidden h-[32rem] flex justify-center items-center">
-					<img class="object-cover w-full h-full" src={movie.header} alt="favicon" />
+					<img
+						class="object-cover w-full h-full"
+						src="https://image.tmdb.org/t/p/w400/{movie.poster_path}"
+						alt="favicon"
+					/>
 				</div>
 				<div class="p-4">
 					<div class="w-fit flex items-center font-medium hover:text-primary-500 transition">
 						<div class="w-4 h-4 mr-1">
 							<img src="../../sparkle.png" alt="" />
 						</div>
-						<div>{movie.rating}</div>
+						<div>{movie.vote_average.toFixed(1)}</div>
 					</div>
 					<h3 class="w-fit hover:text-primary-500 transition">{movie.title}</h3>
 					<div class="flex flex-wrap">
-						{#each movie.genres as genre}
+						{#each movie.genre_strings as genre}
 							<div class="pr-2 truncate w-fit">
 								<a class="hover:text-primary-500 transition" href="/{genre}">{genre}</a>
 							</div>

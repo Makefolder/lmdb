@@ -1,16 +1,30 @@
 <script lang="ts">
 	import Card from '../components/Card.svelte';
 	import type { Movie } from '../types/movie';
+	import type { ApiResponse } from '../types/response';
+	import { onMount } from 'svelte';
 
-	let movies: Movie[] = [
-		{
-			url: '/2001-a-space-odyssey',
-			header: '../../poster.jpg',
-			title: '2001: A space odyssey',
-			rating: 8.3,
-			genres: ['Adventure', 'Sci-Fi', 'Thriller', 'Detective', 'Action']
+	let movies: Movie[] = [];
+	let error: string | null = null;
+	let page: number = 2;
+	let loading: boolean = true;
+
+	onMount(async () => {
+		try {
+			const response = await fetch('http://127.0.0.1:3001/api/v1/movie/' + page);
+			const data: ApiResponse = await response.json();
+			if (data.message === 'success') {
+				movies = data.data.results;
+			} else {
+				error = 'Failed to fetch movies.';
+			}
+		} catch (err) {
+			console.log(err);
+			error = 'Internal error occured';
+		} finally {
+			loading = false;
 		}
-	];
+	});
 </script>
 
 <svelte:head>
@@ -37,9 +51,15 @@
 </div>
 
 <div class="mt-[2rem] card__container flex flex-wrap gap-[0.7rem] justify-start mx-auto max-w-full">
-	{#each movies as movie}
-		<Card {movie} />
-	{/each}
+	{#if loading}
+		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Loading...</div>
+	{:else if error !== null}
+		<div>Internal error</div>
+	{:else}
+		{#each movies as movie}
+			<Card {movie} />
+		{/each}
+	{/if}
 </div>
 
 <style>

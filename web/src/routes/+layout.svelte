@@ -40,7 +40,7 @@
 	<slot />
 </div>
 
-<footer class="bg-surface-800/40 backdrop-blur-md mt-[6rem] border-t-[1px] border-surface-500">
+<footer class="bg-surface-800/40 backdrop-blur-md mt-[6rem] border-t-[1px] border-surface-500/50">
 	<div class="container px-1 py-[1.25rem] mx-auto max-w-[1460px]">
 		<Footer {logo} {title} {span} {links} />
 	</div>

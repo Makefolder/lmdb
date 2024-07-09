@@ -7,9 +7,11 @@ import (
 	"github.com/aegislash525/lmdb/pkg/middleware"
 )
 
-func Api(mux *http.ServeMux) {
-	mux.HandleFunc("GET /", middleware.Logger(handlers.Index))
-	mux.HandleFunc("POST /", middleware.Logger(handlers.Index))
-	mux.HandleFunc("PUT /", middleware.Logger(handlers.Index))
-	mux.HandleFunc("DELETE /", middleware.Logger(handlers.Index))
+func Setup(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/v1/", middleware.Logger(handlers.Index))
+	mux.HandleFunc("POST /api/v1/", middleware.Logger(handlers.Index))
+	mux.HandleFunc("PUT /api/v1/", middleware.Logger(handlers.Index))
+	mux.HandleFunc("DELETE /api/v1/", middleware.Logger(handlers.Index))
+
+	movies(mux)
 }
