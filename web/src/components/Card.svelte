@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import type { Movie } from '../types/movie';
 	let movie: Movie = {
 		id: 0,
@@ -19,7 +20,11 @@
 	export { movie, saved };
 </script>
 
-<div id="myCard" class="my-4 card w-[22.1rem] card-hover overflow-hidden">
+<div
+	id="myCard"
+	class="my-4 card w-[22.1rem] card-hover overflow-hidden"
+	transition:fade={{ duration: 200 }}
+>
 	<a href={movie.original_title}>
 		<div class="h-full overflow-hidden flex flex-col justify-between">
 			<div>

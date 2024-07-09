@@ -1,12 +1,9 @@
 <script lang="ts">
-	type link = {
-		url: string;
-		title: string;
-	};
+	import type { Link } from '../types/link';
 	export let title: string;
 	export let span: string;
 	export let logo: string;
-	export let links: link[];
+	export let links: Link[];
 </script>
 
 <div class="flex justify-between">
@@ -32,7 +29,7 @@
 			{#each links as link}
 				<div class="ml-1">
 					<a
-						class="hover:bg-primary-500 transition py-[0.35rem] px-[0.65rem] rounded-xl"
+						class="transition py-[0.35rem] px-[0.65rem] rounded-xl {link.colour}"
 						href="/{link.url}">{link.title}</a
 					>
 				</div>

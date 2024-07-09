@@ -1,13 +1,10 @@
 <script lang="ts">
-	type link = {
-		url: string;
-		title: string;
-	};
+	import type { Link } from '../types/link';
 	export let title: string;
 	export let span: string;
-	export let repo: link;
+	export let repo: Link;
 	export let logo: string;
-	export let links: link[];
+	export let links: Link[];
 </script>
 
 <nav class="px-3">
@@ -23,15 +20,14 @@
 			</div>
 		</a>
 		<div>
-			<a class="logo__link hover:bg-primary-500" href={repo.url} target="_blank">{repo.title}</a>
+			<a class="logo__link {repo.colour}" href={repo.url} target="_blank">{repo.title}</a>
 		</div>
 	</div>
 
 	<div class="flex items-center">
 		{#each links as link}
 			<div>
-				<!-- py-2 px-3 hover:bg-red-100 rounded-full -->
-				<a class="nav__button hover:bg-primary-500" href={link.url}>{link.title}</a>
+				<a class="nav__button {link.colour}" href={link.url}>{link.title}</a>
 			</div>
 		{/each}
 	</div>

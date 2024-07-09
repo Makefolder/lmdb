@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/aegislash525/lmdb/database"
 	"github.com/aegislash525/lmdb/internal/initializers"
 	"github.com/aegislash525/lmdb/internal/routes"
 	"github.com/aegislash525/lmdb/internal/services"
@@ -14,6 +15,7 @@ import (
 
 func init() {
 	initializers.LoadEnv()
+	database.Connect()
 	services.GetGenres()
 }
 

@@ -1,10 +1,14 @@
 package services
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"time"
 
+	"github.com/aegislash525/lmdb/database"
 	"github.com/aegislash525/lmdb/internal/types"
 	"github.com/aegislash525/lmdb/pkg/responses"
 	"github.com/aegislash525/lmdb/pkg/utils"
@@ -17,14 +21,35 @@ func Discover(page int) utils.Map {
 		Page    int           `json:"page"`
 		Results []types.Movie `json:"results"`
 	}
+
+	key := fmt.Sprintf("discover_%d", page)
+
+	val, err := database.Client.Get(context.Background(), key).Result()
+	if err == nil {
+		json.Unmarshal([]byte(val), &movies)
+		return responses.SuccessData(movies)
+	}
+
 	url := fmt.Sprintf(
 		"https://api.themoviedb.org/3/discover/movie?api_key=%s&page=%d&include_adult=false&language=uk-UA",
 		os.Getenv("API_KEY"), page)
-	err := utils.Fetch(url, &movies)
+	err = utils.Fetch(url, &movies)
 	if err != nil {
+		log.Println(err)
 		return responses.InternalErr
 	}
 	setGenres(&movies.Results)
+	res, err := json.Marshal(movies)
+	if err != nil {
+		log.Println(err)
+		return responses.InternalErr
+	}
+	// cache will expire in four days
+	err = database.Client.Set(context.Background(), key, res, (time.Hour*24)*4).Err()
+	if err != nil {
+		log.Println(err)
+		return responses.InternalErr
+	}
 	return responses.SuccessData(utils.Map{
 		"page":    movies.Page,
 		"results": movies.Results,

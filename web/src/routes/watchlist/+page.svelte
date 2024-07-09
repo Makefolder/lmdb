@@ -3,6 +3,13 @@
 	import type { Movie } from '../../types/movie';
 	import { onMount } from 'svelte';
 
+	let movies: Movie[] = [];
+	let error: string | null = null;
+	// let page: number = 1; use for infinite scroll in case
+	// user's got hella movies
+	let loading: boolean = false;
+	let saved = true;
+
 	onMount(() => {
 		const body = document.body.style;
 		body.backgroundImage = `radial-gradient(at 98% 1%, rgba(var(--color-secondary-500) / 0.33) 0px, transparent 50%),
@@ -12,17 +19,6 @@
 			body.backgroundImage = '';
 		};
 	});
-
-	let movies: Movie[] = [
-		{
-			url: '/2001-a-space-odyssey',
-			header: '../../poster.jpg',
-			title: '2001: A space odyssey',
-			rating: 8.3,
-			genres: ['Adventure', 'Sci-Fi', 'Thriller', 'Detective', 'Action']
-		}
-	];
-	let saved = true;
 </script>
 
 <svelte:head>
@@ -36,8 +32,14 @@
 </div>
 
 <div class="mt-[2rem] card__container flex flex-wrap gap-[0.7rem] justify-start mx-auto max-w-full">
-	<Card {saved} />
-	{#each movies as movie}
-		<Card {saved} {movie} />
-	{/each}
+	{#if error !== null}
+		<div>Internal error</div>
+	{:else}
+		{#each movies as movie}
+			<Card {saved} {movie} />
+		{/each}
+	{/if}
+	{#if loading}
+		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Loading...</div>
+	{/if}
 </div>

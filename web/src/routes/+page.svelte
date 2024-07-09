@@ -2,19 +2,21 @@
 	import Card from '../components/Card.svelte';
 	import type { Movie } from '../types/movie';
 	import type { ApiResponse } from '../types/response';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	let movies: Movie[] = [];
 	let error: string | null = null;
-	let page: number = 2;
-	let loading: boolean = true;
+	let page: number = 1;
+	let loading: boolean = false;
 
-	onMount(async () => {
+	const fetchData = async () => {
+		if (loading) return;
+		loading = true;
 		try {
 			const response = await fetch('http://127.0.0.1:3001/api/v1/movie/' + page);
 			const data: ApiResponse = await response.json();
 			if (data.message === 'success') {
-				movies = data.data.results;
+				movies = [...movies, ...data.data.results];
 			} else {
 				error = 'Failed to fetch movies.';
 			}
@@ -22,8 +24,37 @@
 			console.log(err);
 			error = 'Internal error occured';
 		} finally {
+			page++;
 			loading = false;
 		}
+	};
+
+	const handleScroll = () => {
+		if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+			fetchData();
+		}
+	};
+
+	const characters: string[] = ['', '.', '..', '...'];
+	let index: number = 0;
+	let currentChar: string = characters[index];
+	const updateCharacter = () => {
+		index = (index + 1) % characters.length;
+		currentChar = characters[index];
+	};
+	let interval: NodeJS.Timeout;
+
+	onMount(() => {
+		interval = setInterval(updateCharacter, 500);
+		fetchData();
+		window.addEventListener('scroll', handleScroll);
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	});
+
+	onDestroy(() => {
+		clearInterval(interval);
 	});
 </script>
 
@@ -51,14 +82,15 @@
 </div>
 
 <div class="mt-[2rem] card__container flex flex-wrap gap-[0.7rem] justify-start mx-auto max-w-full">
-	{#if loading}
-		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Loading...</div>
-	{:else if error !== null}
-		<div>Internal error</div>
+	{#if error !== null}
+		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Сталася помилка (500)</div>
 	{:else}
 		{#each movies as movie}
 			<Card {movie} />
 		{/each}
+	{/if}
+	{#if loading}
+		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Завантаження{currentChar}</div>
 	{/if}
 </div>
 

@@ -1,34 +1,46 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import Card from '../../components/Card.svelte';
 	import type { Movie } from '../../types/movie';
+	import type { ApiResponse } from '../../types/response';
 
-	onMount(() => {
-		const body = document.body.style;
-		body.backgroundImage = `radial-gradient(at 0% 0%, rgba(var(--color-secondary-500) / 0.33) 0px, transparent 50%),
-		radial-gradient(at 98% 100%, rgba(var(--color-warning-500) / 0.28) 0px, transparent 50%)`;
+	let movies: Movie[] = [];
+	let error: string | null = null;
+	let page: number = 1;
+	let loading: boolean = false;
 
-		return () => {
-			body.backgroundImage = '';
-		};
-	});
+	const characters: string[] = ['', '.', '..', '...'];
+	let index: number = 0;
+	let currentChar: string = characters[index];
+	const updateCharacter = () => {
+		index = (index + 1) % characters.length;
+		currentChar = characters[index];
+	};
+	let interval: NodeJS.Timeout;
 
-	let movies: Movie[] = [
-		{
-			url: '/2001-a-space-odyssey',
-			header: '../../poster.jpg',
-			title: '2001: A space odyssey',
-			rating: 8.3,
-			genres: ['Adventure', 'Sci-Fi', 'Thriller', 'Detective', 'Action']
-		},
-		{
-			url: '/bad-times-at-el-royale',
-			header: '../../el-royale.jpg',
-			title: 'Bad Times at the El Royale',
-			rating: 8.3,
-			genres: ['Adventure', 'Thriller', 'Detective', 'Action']
+	onMount(async () => {
+		interval = setInterval(updateCharacter, 500);
+		if (loading) return;
+		loading = true;
+		try {
+			const response = await fetch('http://127.0.0.1:3001/api/v1/movie/' + page);
+			const data: ApiResponse = await response.json();
+			if (data.message === 'success') {
+				movies = [...movies, ...data.data.results];
+			} else {
+				error = 'Failed to fetch movies.';
+			}
+		} catch (err) {
+			console.log(err);
+			error = 'Internal error occured';
+		} finally {
+			page++;
+			loading = false;
 		}
-	];
+	});
+	onDestroy(() => {
+		clearInterval(interval);
+	});
 </script>
 
 <svelte:head>
@@ -49,9 +61,21 @@
 </div>
 
 <div class="mt-[2rem] card__container flex flex-wrap gap-[0.7rem] justify-start mx-auto max-w-full">
-	{#each movies as movie}
-		<Card {movie} />
-	{/each}
+	{#if error !== null}
+		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Сталася помилка (500)</div>
+	{:else}
+		{#each movies as movie}
+			<Card {movie} />
+		{/each}
+		{#if !loading}
+			<div class="w-full flex justify-center">
+				<a class="btn variant-filled-surface" href="/">Хочу ще!</a>
+			</div>
+		{/if}
+	{/if}
+	{#if loading}
+		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Завантаження{currentChar}</div>
+	{/if}
 </div>
 
 <style>
