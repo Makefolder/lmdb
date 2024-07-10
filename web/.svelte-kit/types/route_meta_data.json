@@ -1,5 +1,9 @@
 {
 	"/": [],
+	"/genre/[genreId]": [],
+	"/movie/[movieId]": [
+		"src/routes/movie/[movieId]/+page.ts"
+	],
 	"/search": [],
 	"/watchlist": []
 }

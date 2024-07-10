@@ -4,7 +4,7 @@
 	let movie: Movie = {
 		id: 0,
 		poster_path: '../../poster.jpg',
-		title: 'тайтл',
+		title: 'Тайтл',
 		overview: 'overview',
 		genre_ids: [1, 1, 1],
 		genre_strings: ['none', 'none', 'none'],
@@ -25,13 +25,13 @@
 	class="my-4 card w-[22.1rem] card-hover overflow-hidden"
 	transition:fade={{ duration: 200 }}
 >
-	<a href={movie.original_title}>
+	<a href="/movie/{movie.id}">
 		<div class="h-full overflow-hidden flex flex-col justify-between">
 			<div>
 				<div id="cardPoster" class="overflow-hidden h-[32rem] flex justify-center items-center">
 					<img
 						class="object-cover w-full h-full"
-						src="https://image.tmdb.org/t/p/w400/{movie.poster_path}"
+						src="https://image.tmdb.org/t/p/w400{movie.poster_path}"
 						alt="favicon"
 					/>
 				</div>

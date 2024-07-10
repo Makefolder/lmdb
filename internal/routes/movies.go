@@ -8,5 +8,7 @@ import (
 )
 
 func movies(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/v1/movie/{page}", middleware.Logger(handlers.Discover))
+	mux.HandleFunc("GET /api/v1/movie/discover/{page}", middleware.Logger(handlers.Discover))
+	mux.HandleFunc("GET /api/v1/movie/i/{id}", middleware.Logger(handlers.Details))
+	mux.HandleFunc("GET /api/v1/movie/i/{id}/videos", middleware.Logger(handlers.Videos))
 }

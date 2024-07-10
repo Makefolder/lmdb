@@ -19,11 +19,15 @@
 	let interval: NodeJS.Timeout;
 
 	onMount(async () => {
+		const body = document.body.style;
+		body.backgroundImage = `radial-gradient(at 0% 0%, rgba(var(--color-secondary-500) / 0.33) 0px, transparent 50%),
+			radial-gradient(at 98% 100%, rgba(var(--color-warning-500) / 0.28) 0px, transparent 50%)`;
+
 		interval = setInterval(updateCharacter, 500);
 		if (loading) return;
 		loading = true;
 		try {
-			const response = await fetch('http://127.0.0.1:3001/api/v1/movie/' + page);
+			const response = await fetch('http://192.168.68.111:3001/api/v1/movie/discover/' + page);
 			const data: ApiResponse = await response.json();
 			if (data.message === 'success') {
 				movies = [...movies, ...data.data.results];
@@ -37,6 +41,9 @@
 			page++;
 			loading = false;
 		}
+		return () => {
+			body.backgroundImage = '';
+		};
 	});
 	onDestroy(() => {
 		clearInterval(interval);

@@ -13,7 +13,7 @@
 		if (loading) return;
 		loading = true;
 		try {
-			const response = await fetch('http://127.0.0.1:3001/api/v1/movie/' + page);
+			const response = await fetch('http://192.168.68.111:3001/api/v1/movie/discover/' + page);
 			const data: ApiResponse = await response.json();
 			if (data.message === 'success') {
 				movies = [...movies, ...data.data.results];

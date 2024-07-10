@@ -44,19 +44,34 @@
 			colour: Colour.Green
 		}
 	];
+
+	const pkg = {
+		logo: logo,
+		repo: repo,
+		title: title,
+		span: span,
+		links: links
+	};
 </script>
 
 <GetUpBtn />
 
-<div class="container px-1 h-full mx-auto max-w-[1460px]">
-	<div class="my-4">
-		<Navbar {logo} {repo} {title} {span} {links} />
+<div class="flex flex-col min-h-screen">
+	<div class="container px-1 mx-auto max-w-[1460px] my-4">
+		<Navbar {...pkg} />
 	</div>
-	<slot />
-</div>
 
-<footer class="bg-surface-800/40 backdrop-blur-md mt-[6rem] border-t-[1px] border-surface-500/50">
-	<div class="container px-1 py-[1.25rem] mx-auto max-w-[1460px]">
+	<main class="flex-grow container px-1 h-full mx-auto max-w-[1460px]">
+		<slot />
+	</main>
+
+	<div class="container px-1 mx-auto max-w-[1460px]">
 		<Footer {logo} {title} {span} {links} />
 	</div>
-</footer>
+</div>
+
+<style>
+	main {
+		@apply flex-1;
+	}
+</style>
