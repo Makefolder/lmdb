@@ -2,6 +2,7 @@ package types
 
 type Movie struct {
 	MovID  uint   `json:"movie_id" gorm:"primary_key;unique"`
+	Adult  bool   `json:"adult"`
 	ID     int    `json:"id"`
 	Poster string `json:"poster_path"`
 

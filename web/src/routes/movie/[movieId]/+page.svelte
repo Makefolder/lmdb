@@ -93,6 +93,7 @@
 
 	const characters: string[] = ['', '.', '..', '...'];
 	let index: number = 0;
+	let date: string = '';
 	let currentChar: string = characters[index];
 	const updateCharacter = () => {
 		index = (index + 1) % characters.length;
@@ -101,7 +102,14 @@
 
 	onMount(() => {
 		interval = setInterval(updateCharacter, 500);
-		fetchData();
+		fetchData().then(() => {
+			const dateArr: string[] = movie.release_date.split('-');
+			let day: string = dateArr[2];
+			if (dateArr[2].charAt(0) === '0') {
+				day = dateArr[2].charAt(1);
+			}
+			date = `${day} ${data.post.convMonth(dateArr[1])} ${dateArr[0]}`;
+		});
 
 		const body = document.body;
 		body.style.backgroundImage = `radial-gradient(at 0% 0%, rgba(var(--color-secondary-500) / 0.33) 0px, transparent 50%),
@@ -121,7 +129,7 @@
 	<title>LMDB - {movie.title}</title>
 </svelte:head>
 
-<main>
+<div>
 	{#if error !== null}
 		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Сталася помилка (500)</div>
 	{:else}
@@ -137,7 +145,23 @@
 							<div>Гасло: <i>{movie.tagline}</i></div>
 						{/if}
 						<div>Рейтинґ: {movie.vote_average.toFixed(1)}</div>
-						<div>Дата виходу: {movie.release_date}</div>
+						<div>Дата виходу: {date}</div>
+						{#if movie.origin_country.length !== 0}
+							<div class="flex flex-wrap">
+								{#if movie.origin_country.length === 1}
+									<div class="mr-2">Країна:</div>
+								{:else}
+									<div class="mr-2">Країни:</div>
+								{/if}
+								{#each movie.origin_country as country}
+									<div class="mr-2">
+										<a class="hover:text-primary-500 transition" href="/genre/{country}"
+											>{country}</a
+										>
+									</div>
+								{/each}
+							</div>
+						{/if}
 						<div class="flex flex-wrap">
 							<div class="mr-2">Жанри:</div>
 							{#each movie.genres as genre}
@@ -175,4 +199,4 @@
 	{#if loading}
 		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Завантаження{currentChar}</div>
 	{/if}
-</main>
+</div>

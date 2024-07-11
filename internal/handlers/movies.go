@@ -9,6 +9,18 @@ import (
 	"github.com/aegislash525/lmdb/pkg/responses"
 )
 
+func Similar(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(responses.InternalErr)
+		return
+	}
+	result := services.Similar(id)
+	setHeader(&w, result)
+	json.NewEncoder(w).Encode(result)
+}
+
 func Videos(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {

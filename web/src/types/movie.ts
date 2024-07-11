@@ -1,5 +1,6 @@
 export type Movie = {
 	id: number;
+	adult: boolean;
 	poster_path: string;
 	title: string;
 	overview: string;

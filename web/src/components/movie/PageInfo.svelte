@@ -17,7 +17,7 @@
 			<div
 				class="cursor-default absolute top-5 right-5 z-10 badge variant-filled text-[1em] !text-white !bg-rose-500"
 			>
-				для дорослих
+				+18
 			</div>
 		{/if}
 	</div>

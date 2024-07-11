@@ -3,6 +3,7 @@
 	import type { Movie } from '../types/movie';
 	let movie: Movie = {
 		id: 0,
+		adult: false,
 		poster_path: '../../poster.jpg',
 		title: 'Тайтл',
 		overview: 'overview',
@@ -17,6 +18,8 @@
 	};
 
 	let saved = false;
+	const dateArr: string[] = movie.release_date.split('-');
+	const date: string = `${dateArr[0]}`;
 	export { movie, saved };
 </script>
 
@@ -28,27 +31,44 @@
 	<a href="/movie/{movie.id}">
 		<div class="h-full overflow-hidden flex flex-col justify-between">
 			<div>
-				<div id="cardPoster" class="overflow-hidden h-[32rem] flex justify-center items-center">
+				<div
+					id="cardPoster"
+					class="relative overflow-hidden h-[32rem] flex justify-center items-center"
+				>
 					<img
 						class="object-cover w-full h-full"
 						src="https://image.tmdb.org/t/p/w400{movie.poster_path}"
 						alt="favicon"
 					/>
+					{#if movie.adult}
+						<div
+							class="cursor-default absolute top-5 right-5 z-10 badge variant-filled text-[1em] !text-white !bg-rose-500"
+						>
+							+18
+						</div>
+					{/if}
 				</div>
 				<div class="p-4">
-					<div class="w-fit flex items-center font-medium hover:text-primary-500 transition">
+					<div class="w-full flex items-center font-medium">
 						<div class="w-4 h-4 mr-1">
 							<img src="../../sparkle.png" alt="" />
 						</div>
-						<div>{movie.vote_average.toFixed(1)}</div>
+						<div class="flex justify-between w-full">
+							<div class="w-fit hover:text-primary-500 transition">
+								{movie.vote_average.toFixed(1)}
+							</div>
+							<div class="w-fit hover:text-primary-500 transition">{date}</div>
+						</div>
 					</div>
 					<h3 class="w-fit hover:text-primary-500 transition">{movie.title}</h3>
 					<div class="flex flex-wrap">
-						{#each movie.genre_strings as genre}
-							<div class="pr-2 truncate w-fit">
-								<a class="hover:text-primary-500 transition" href="/{genre}">{genre}</a>
-							</div>
-						{/each}
+						{#if movie.genre_strings.length !== 0}
+							{#each movie.genre_strings as genre}
+								<div class="pr-2 truncate w-fit">
+									<a class="hover:text-primary-500 transition" href="/{genre}">{genre}</a>
+								</div>
+							{/each}
+						{/if}
 					</div>
 				</div>
 			</div>
