@@ -1,9 +1,10 @@
 <script lang="ts">
+	import Similar from '../../../components/movie/Similar.svelte';
 	import Studio from '../../../components/movie/Studio.svelte';
 	import PageInfo from '../../../components/movie/PageInfo.svelte';
 	import Overview from '../../../components/movie/Overview.svelte';
 	import Videos from '../../../components/movie/Videos.svelte';
-	import type { MovieDetails } from '../../../types/movie';
+	import type { Movie, MovieDetails } from '../../../types/movie';
 	import type { ApiDetailedResponse } from '../../../types/response';
 	import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
@@ -66,6 +67,8 @@
 		vote_average: 0,
 		vote_count: 0
 	};
+
+	let similars: Movie[] = data.post.similar;
 
 	const id: string = $page.params.movieId;
 	let error: string | null = null;
@@ -134,7 +137,12 @@
 		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Сталася помилка (500)</div>
 	{:else}
 		<div class="flex mt-9">
-			<PageInfo adult={movie.adult} poster_path={movie.poster_path} saved={false} />
+			<PageInfo
+				adult={movie.adult}
+				poster_path={movie.poster_path}
+				overview={movie.overview}
+				saved={false}
+			/>
 
 			<div class="right__side ml-5 pt-3 pl-3 rounded-2xl flex-grow-0 overflow-hidden w-full">
 				<div class="flex flex-wrap justify-between gap-[1.3rem] leading-7">
@@ -145,7 +153,7 @@
 							<div>Гасло: <i>{movie.tagline}</i></div>
 						{/if}
 						<div>Рейтинґ: {movie.vote_average.toFixed(1)}</div>
-						<div>Дата виходу: {date}</div>
+						<div>Статус: {movie.status}</div>
 						{#if movie.origin_country.length !== 0}
 							<div class="flex flex-wrap">
 								{#if movie.origin_country.length === 1}
@@ -153,15 +161,16 @@
 								{:else}
 									<div class="mr-2">Країни:</div>
 								{/if}
-								{#each movie.origin_country as country}
+								{#each movie.production_countries as country}
 									<div class="mr-2">
-										<a class="hover:text-primary-500 transition" href="/genre/{country}"
-											>{country}</a
+										<a class="hover:text-primary-500 transition" href="/genre/{country.iso_3166_1}"
+											>{country.name}</a
 										>
 									</div>
 								{/each}
 							</div>
 						{/if}
+						<div>Дата виходу: {date}</div>
 						<div class="flex flex-wrap">
 							<div class="mr-2">Жанри:</div>
 							{#each movie.genres as genre}
@@ -185,16 +194,17 @@
 					</div>
 				</div>
 				<hr class="my-5" />
-				{#if movie.overview != ''}
+				<!-- {#if movie.overview != ''}
 					<div class="mt-6 mb-12">
 						<Overview overview={movie.overview} />
 					</div>
-				{/if}
+				{/if} -->
 				{#if data.post.videos.length !== 0}
 					<Videos videos={data.post.videos} />
 				{/if}
 			</div>
 		</div>
+		<Similar movies={similars} />
 	{/if}
 	{#if loading}
 		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Завантаження{currentChar}</div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import type { Movie } from '../types/movie';
-	let movie: Movie = {
+	export let movie: Movie = {
 		id: 0,
 		adult: false,
 		poster_path: '../../poster.jpg',
@@ -17,15 +17,15 @@
 		vote_count: 1
 	};
 
-	let saved = false;
+	export let saved = false;
+	export let width: string = 'w-[22.1rem]';
 	const dateArr: string[] = movie.release_date.split('-');
 	const date: string = `${dateArr[0]}`;
-	export { movie, saved };
 </script>
 
 <div
 	id="myCard"
-	class="my-4 card w-[22.1rem] card-hover overflow-hidden"
+	class="my-4 card {width} card-hover overflow-hidden"
 	transition:fade={{ duration: 200 }}
 >
 	<a href="/movie/{movie.id}">

@@ -3,6 +3,6 @@
 </script>
 
 <div>
-	<div class="h2 font-semibold mb-5">Опис</div>
+	<div class="text-[2em] font-semibold mb-4">Опис</div>
 	<p class="text-[1.1em]">{overview}</p>
 </div>

@@ -1,4 +1,4 @@
-import type { ApiVideoResponse } from '../../../types/response';
+import type { ApiVideoResponse, ApiResponse } from '../../../types/response';
 
 const convertMonth = (month: string): string => {
 	const num: number = +month;
@@ -25,14 +25,21 @@ const convertCountry = (code: string): string => {
 };
 
 export const load = async ({ params }) => {
-	const response = await fetch(
+	const responseVideos = await fetch(
 		'http://192.168.68.111:3001/api/v1/movie/i/' + params.movieId + '/videos'
 	);
-	const data: ApiVideoResponse = await response.json();
-	const results = data.data.results;
+	const dataVideos: ApiVideoResponse = await responseVideos.json();
+	const resultsVideos = dataVideos.data.results;
+
+	const responseSimilar = await fetch(
+		'http://192.168.68.111:3001/api/v1/movie/i/' + params.movieId + '/similar'
+	);
+	const dataSimilar: ApiResponse = await responseSimilar.json();
+	const resultsSimilar = dataSimilar.data.results;
 	return {
 		post: {
-			videos: results,
+			videos: resultsVideos,
+			similar: resultsSimilar,
 			convMonth: convertMonth,
 			convertCountry: convertCountry
 		}

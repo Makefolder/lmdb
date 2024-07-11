@@ -1,10 +1,12 @@
 <script lang="ts">
+	import Overview from './Overview.svelte';
 	export let adult: boolean;
 	export let poster_path: string;
 	export let saved: boolean = true;
+	export let overview: string = '';
 </script>
 
-<div class="flex-shrink-0 w-[25rem] items-center rounded-2xl">
+<div class="flex-shrink-0 w-[22rem] items-center rounded-2xl">
 	<div class="w-full relative">
 		<a href="https://image.tmdb.org/t/p/w500{poster_path}" target="_blank">
 			<img
@@ -30,5 +32,10 @@
 			>
 		{/if}
 	</div>
-	<hr class="my-3" />
+	{#if overview != ''}
+		<hr class="my-3" />
+		<div class="mt-6 mb-12">
+			<Overview {overview} />
+		</div>
+	{/if}
 </div>
