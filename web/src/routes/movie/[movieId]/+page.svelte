@@ -2,7 +2,6 @@
 	import Similar from '../../../components/movie/Similar.svelte';
 	import Studio from '../../../components/movie/Studio.svelte';
 	import PageInfo from '../../../components/movie/PageInfo.svelte';
-	import Overview from '../../../components/movie/Overview.svelte';
 	import Videos from '../../../components/movie/Videos.svelte';
 	import type { Movie, MovieDetails } from '../../../types/movie';
 	import type { ApiDetailedResponse } from '../../../types/response';
@@ -69,7 +68,6 @@
 	};
 
 	let similars: Movie[] = data.post.similar;
-
 	const id: string = $page.params.movieId;
 	let error: string | null = null;
 	let loading: boolean = false;
@@ -138,6 +136,7 @@
 	{:else}
 		<div class="flex mt-9">
 			<PageInfo
+				id={movie.id}
 				adult={movie.adult}
 				poster_path={movie.poster_path}
 				overview={movie.overview}
@@ -194,11 +193,6 @@
 					</div>
 				</div>
 				<hr class="my-5" />
-				<!-- {#if movie.overview != ''}
-					<div class="mt-6 mb-12">
-						<Overview overview={movie.overview} />
-					</div>
-				{/if} -->
 				{#if data.post.videos.length !== 0}
 					<Videos videos={data.post.videos} />
 				{/if}

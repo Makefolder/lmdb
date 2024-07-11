@@ -5,7 +5,7 @@
 		id: 0,
 		adult: false,
 		poster_path: '../../poster.jpg',
-		title: 'Тайтл',
+		title: 'Назва',
 		overview: 'overview',
 		genre_ids: [1, 1, 1],
 		genre_strings: ['none', 'none', 'none'],
@@ -21,6 +21,35 @@
 	export let width: string = 'w-[22.1rem]';
 	const dateArr: string[] = movie.release_date.split('-');
 	const date: string = `${dateArr[0]}`;
+
+	async function remove() {
+		const url = 'http://192.168.68.111:3001/api/v1/r/watchlist/' + movie.id;
+		const response = await fetch(url, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (response.ok) {
+			const data = await response.json();
+			console.log(data);
+			saved = false;
+		}
+	}
+	async function add() {
+		const url = 'http://192.168.68.111:3001/api/v1/s/watchlist/' + movie.id;
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (response.ok) {
+			const data = await response.json();
+			console.log(data);
+			saved = true;
+		}
+	}
 </script>
 
 <div
@@ -28,9 +57,9 @@
 	class="my-4 card {width} card-hover overflow-hidden"
 	transition:fade={{ duration: 200 }}
 >
-	<a href="/movie/{movie.id}">
-		<div class="h-full overflow-hidden flex flex-col justify-between">
-			<div>
+	<div class="h-full overflow-hidden flex flex-col justify-between">
+		<div>
+			<a data-sveltekit-reload href="/movie/{movie.id}">
 				<div
 					id="cardPoster"
 					class="relative overflow-hidden h-[32rem] flex justify-center items-center"
@@ -71,20 +100,20 @@
 						{/if}
 					</div>
 				</div>
-			</div>
+			</a>
+		</div>
 
-			<div class="overflow-hidden">
-				<hr class="opacity-50 mt-auto" />
-				<div class="my__card card-footer">
-					{#if saved}
-						<button class="saved__card normal-case">Видалити</button>
-					{:else}
-						<button class="normal-case">Додати до плейлісту</button>
-					{/if}
-				</div>
+		<div class="overflow-hidden">
+			<hr class="opacity-50 mt-auto" />
+			<div class="my__card card-footer">
+				{#if saved}
+					<button on:click={remove} class="saved__card normal-case">Видалити</button>
+				{:else}
+					<button on:click={add} class="normal-case">Додати до плейлісту</button>
+				{/if}
 			</div>
 		</div>
-	</a>
+	</div>
 </div>
 
 <style>

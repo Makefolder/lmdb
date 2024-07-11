@@ -4,6 +4,8 @@
 	import { onMount } from 'svelte';
 
 	let movies: Movie[] = [];
+	export let data;
+
 	let error: string | null = null;
 	// let page: number = 1; use for infinite scroll in case
 	// user's got hella movies
@@ -11,6 +13,8 @@
 	let saved = true;
 
 	onMount(() => {
+		movies = [...movies, ...data.post.data.data];
+		console.log(data.post.data.data);
 		const body = document.body.style;
 		body.backgroundImage = `radial-gradient(at 98% 1%, rgba(var(--color-secondary-500) / 0.33) 0px, transparent 50%),
 		radial-gradient(at 0% 0%, rgba(var(--color-primary-500) / 0.33) 0px, transparent 50%)`;

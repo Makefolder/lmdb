@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,11 +16,18 @@ import (
 
 func init() {
 	initializers.LoadEnv()
-	database.Connect()
+	database.ConnectRedis()
+	database.ConnectSqlite()
 	services.GetGenres()
 }
 
 func main() {
+	migrate := flag.Bool("m", false, "migrate the models to sqlite3 database")
+	flag.Parse()
+	if *migrate {
+		database.Migrate()
+	}
+
 	addr := os.Getenv("ADDR")
 	port := os.Getenv("PORT")
 

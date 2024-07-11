@@ -14,4 +14,5 @@ func Setup(mux *http.ServeMux) {
 	mux.HandleFunc("DELETE /api/v1/", middleware.Logger(handlers.Index))
 
 	movies(mux)
+	watchlist(mux)
 }

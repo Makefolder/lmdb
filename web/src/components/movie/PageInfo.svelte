@@ -1,9 +1,39 @@
 <script lang="ts">
 	import Overview from './Overview.svelte';
+	export let id: number = 0;
 	export let adult: boolean;
 	export let poster_path: string;
-	export let saved: boolean = true;
+	export let saved: boolean = false;
 	export let overview: string = '';
+
+	async function remove() {
+		const url = 'http://192.168.68.111:3001/api/v1/r/watchlist/' + id;
+		const response = await fetch(url, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (response.ok) {
+			const data = await response.json();
+			console.log(data);
+			saved = false;
+		}
+	}
+	async function add() {
+		const url = 'http://192.168.68.111:3001/api/v1/s/watchlist/' + id;
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (response.ok) {
+			const data = await response.json();
+			console.log(data);
+			saved = true;
+		}
+	}
 </script>
 
 <div class="flex-shrink-0 w-[22rem] items-center rounded-2xl">
@@ -25,10 +55,13 @@
 	</div>
 	<div class="mt-3">
 		{#if !saved}
-			<button class="btn w-full bg-surface-500/40 rounded-lg hover:bg-primary-500/80">Додати</button
+			<button on:click={add} class="btn w-full bg-surface-500/40 rounded-lg hover:bg-primary-500/80"
+				>Додати</button
 			>
 		{:else}
-			<button class="btn w-full bg-surface-500/40 rounded-lg hover:bg-error-500/80">Видалити</button
+			<button
+				on:click={remove}
+				class="btn w-full bg-surface-500/40 rounded-lg hover:bg-error-500/80">Видалити</button
 			>
 		{/if}
 	</div>

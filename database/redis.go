@@ -8,7 +8,7 @@ import (
 
 var Client *redis.Client
 
-func Connect() {
+func ConnectRedis() {
 	Client = redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_ADDR"),
 		Password: os.Getenv("REDIS_PASS"),

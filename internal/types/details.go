@@ -1,5 +1,10 @@
 package types
 
+type Genre struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type MovieDetails struct {
 	PrimaryKey uint    `json:"primary_key" gorm:"primarykey;unique"`
 	Adult      bool    `json:"adult"`
@@ -11,10 +16,7 @@ type MovieDetails struct {
 		Poster   string `json:"poster_path"`
 		Backdrop string `json:"backdrop_path"`
 	} `json:"belongs_to_collection"`
-	Genres []struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	} `json:"genres"`
+	Genres        []Genre  `json:"genres"`
 	Homepage      string   `json:"homepage"`
 	ID            int      `json:"id"`
 	IMDBID        string   `json:"imdb_id"`

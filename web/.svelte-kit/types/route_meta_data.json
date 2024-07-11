@@ -5,5 +5,7 @@
 		"src/routes/movie/[movieId]/+page.ts"
 	],
 	"/search": [],
-	"/watchlist": []
+	"/watchlist": [
+		"src/routes/watchlist/+page.ts"
+	]
 }
