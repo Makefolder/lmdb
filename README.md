@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/tailwind-424242?logo=tailwindcss&logoColor=06B6D4&style=for-the-badge"/>
   <img src="https://img.shields.io/badge/svelte-424242?logo=svelte&style=for-the-badge&logoColor=ff3e00"/>
   <img src="https://img.shields.io/badge/skeleton-424242?style=for-the-badge&logoColor=ff3e00"/>
-  <img src="https://img.shields.io/badge/©%20MIT-green?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/©%20MIT-424242?style=for-the-badge"/>
 </div>
 
 ## ✨ Frontend

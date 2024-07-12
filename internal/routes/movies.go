@@ -12,4 +12,5 @@ func movies(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/movie/i/{id}", middleware.Logger(handlers.Details))
 	mux.HandleFunc("GET /api/v1/movie/i/{id}/videos", middleware.Logger(handlers.Videos))
 	mux.HandleFunc("GET /api/v1/movie/i/{id}/similar", middleware.Logger(handlers.Similar))
+	mux.HandleFunc("GET /api/v1/movie/s/{title}/{page}", middleware.Logger(handlers.Search))
 }

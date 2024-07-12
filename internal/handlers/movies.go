@@ -9,11 +9,26 @@ import (
 	"github.com/aegislash525/lmdb/pkg/responses"
 )
 
+func returnErr(w *http.ResponseWriter) {
+	(*w).WriteHeader(http.StatusInternalServerError)
+	json.NewEncoder(*w).Encode(responses.InternalErr)
+}
+
+func Search(w http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.PathValue("page"))
+	if err != nil {
+		returnErr(&w)
+		return
+	}
+	result := services.Search(r.PathValue("title"), page)
+	setHeader(&w, result)
+	json.NewEncoder(w).Encode(result)
+}
+
 func Similar(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(responses.InternalErr)
+		returnErr(&w)
 		return
 	}
 	result := services.Similar(id)
@@ -24,8 +39,7 @@ func Similar(w http.ResponseWriter, r *http.Request) {
 func Videos(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(responses.InternalErr)
+		returnErr(&w)
 		return
 	}
 	result := services.Videos(id)
@@ -36,8 +50,7 @@ func Videos(w http.ResponseWriter, r *http.Request) {
 func Discover(w http.ResponseWriter, r *http.Request) {
 	page, err := strconv.Atoi(r.PathValue("page"))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(responses.InternalErr)
+		returnErr(&w)
 		return
 	}
 	result := services.Discover(page)
@@ -48,8 +61,7 @@ func Discover(w http.ResponseWriter, r *http.Request) {
 func Details(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(responses.InternalErr)
+		returnErr(&w)
 		return
 	}
 	result := services.Details(id, "uk-UA")

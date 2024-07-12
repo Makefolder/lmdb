@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 
 	"github.com/aegislash525/lmdb/database"
@@ -16,6 +17,21 @@ import (
 type tmdbResponse struct {
 	Page    int           `json:"page"`
 	Results []types.Movie `json:"results"`
+}
+
+func Search(title string, page int) utils.Map {
+	var body tmdbResponse
+	encoded := url.QueryEscape(title)
+	url := fmt.Sprintf(
+		"https://api.themoviedb.org/3/search/movie?query=%s&include_adult=false&language=uk-UA&page=%d&api_key=%s",
+		encoded, page, os.Getenv("API_KEY"))
+	err := utils.Fetch(url, &body)
+	if err != nil {
+		log.Println(err)
+		return responses.InternalErr
+	}
+	setGenres(&body.Results)
+	return responses.SuccessData(body)
 }
 
 func Similar(id int) utils.Map {

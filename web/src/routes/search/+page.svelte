@@ -4,6 +4,7 @@
 	import type { Movie } from '../../types/movie';
 	import type { ApiResponse } from '../../types/response';
 
+	let value;
 	let movies: Movie[] = [];
 	let error: string | null = null;
 	let page: number = 1;
@@ -17,6 +18,23 @@
 		currentChar = characters[index];
 	};
 	let interval: NodeJS.Timeout;
+
+	async function fetchSearch(title: string) {
+		const res = await fetch('http://192.168.68.111:3001/api/v1/movie/s/' + title + '/' + page);
+		const data: ApiResponse = await res.json();
+		return {
+			post: {
+				response: data
+			}
+		};
+	}
+
+	function search(title: string) {
+		page = 1;
+		fetchSearch(title).then((result) => {
+			movies = result.post.response.data.results;
+		});
+	}
 
 	onMount(async () => {
 		const body = document.body.style;
@@ -58,8 +76,9 @@
 	<div class="space-y-5">
 		<h1 class="h1">Пошук контенту</h1>
 		<div class="search__input relative">
-			<input class="w-full" type="text" placeholder="Ну давай, погнали!" />
+			<input class="w-full" type="text" bind:value placeholder="Ну давай, погнали!" />
 			<button
+				on:click={search(value)}
 				class="absolute top-0 right-0 z-10 h-full bg-surface-500/30 rounded-r-[0.9rem] px-3
 			hover:bg-warning-500 transition">Пошук</button
 			>
@@ -72,7 +91,9 @@
 		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Сталася помилка (500)</div>
 	{:else}
 		{#each movies as movie}
-			<Card {movie} />
+			{#if movie.original_language !== 'ru'}
+				<Card {movie} />
+			{/if}
 		{/each}
 		{#if !loading}
 			<div class="w-full flex justify-center">

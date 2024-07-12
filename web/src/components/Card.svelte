@@ -91,12 +91,14 @@
 					</div>
 					<h3 class="w-fit hover:text-primary-500 transition">{movie.title}</h3>
 					<div class="flex flex-wrap">
-						{#if movie.genre_strings.length !== 0}
-							{#each movie.genre_strings as genre}
-								<div class="pr-2 truncate w-fit">
-									<a class="hover:text-primary-500 transition" href="/{genre}">{genre}</a>
-								</div>
-							{/each}
+						{#if movie.genre_strings !== null}
+							{#if movie.genre_strings.length !== 0}
+								{#each movie.genre_strings as genre}
+									<div class="pr-2 truncate w-fit">
+										<a class="hover:text-primary-500 transition" href="/{genre}">{genre}</a>
+									</div>
+								{/each}
+							{/if}
 						{/if}
 					</div>
 				</div>
