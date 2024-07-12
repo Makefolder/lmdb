@@ -36,6 +36,17 @@ func Similar(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+func Images(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		returnErr(&w)
+		return
+	}
+	result := services.Images(id)
+	setHeader(&w, result)
+	json.NewEncoder(w).Encode(result)
+}
+
 func Videos(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {

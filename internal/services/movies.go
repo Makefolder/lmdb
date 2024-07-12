@@ -87,6 +87,28 @@ func Details(id int, lang string) utils.Map {
 	return responses.SuccessData(body)
 }
 
+func Images(id int) utils.Map {
+	var body struct {
+		ID        int           `json:"id"`
+		Backdrops []types.Image `json:"backdrops"`
+	}
+	url := fmt.Sprintf(
+		"https://api.themoviedb.org/3/movie/%d/images?api_key=%s",
+		id, os.Getenv("API_KEY"))
+
+	key := fmt.Sprintf("movie_images_%d", id)
+	res, err := cache(url, key, body)
+	if err != nil {
+		return responses.InternalErr
+	}
+	err = json.Unmarshal(res, &body)
+	if err != nil {
+		log.Println(err)
+		return responses.InternalErr
+	}
+	return responses.SuccessData(body)
+}
+
 func Videos(id int) utils.Map {
 	var body struct {
 		ID      int           `json:"id"`

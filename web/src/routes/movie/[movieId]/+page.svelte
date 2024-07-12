@@ -2,6 +2,7 @@
 	import Similar from '../../../components/movie/Similar.svelte';
 	import Studio from '../../../components/movie/Studio.svelte';
 	import PageInfo from '../../../components/movie/PageInfo.svelte';
+	import Images from '../../../components/movie/Images.svelte';
 	import Videos from '../../../components/movie/Videos.svelte';
 	import type { Movie, MovieDetails } from '../../../types/movie';
 	import type { ApiDetailedResponse } from '../../../types/response';
@@ -200,8 +201,11 @@
 						{/each}
 					</div>
 				</div>
-				<hr class="my-5" />
+				{#if data.post.images.backdrops.length !== 0}
+					<Images images={data.post.images.backdrops} />
+				{/if}
 				{#if data.post.videos.length !== 0}
+					<hr class="my-5" />
 					<Videos videos={data.post.videos} />
 				{/if}
 			</div>

@@ -4,7 +4,7 @@
 	export let movie: Movie = {
 		id: 0,
 		adult: false,
-		poster_path: '../../poster.jpg',
+		poster_path: 'https://fakeimg.pl/300x500/323232/ffffff?text=No+poster&font=bebas',
 		title: 'Назва',
 		overview: 'overview',
 		genre_ids: [1, 1, 1],
@@ -64,11 +64,19 @@
 					id="cardPoster"
 					class="relative overflow-hidden h-[32rem] flex justify-center items-center"
 				>
-					<img
-						class="object-cover w-full h-full"
-						src="https://image.tmdb.org/t/p/w400{movie.poster_path}"
-						alt="favicon"
-					/>
+					{#if movie.poster_path !== ''}
+						<img
+							class="object-cover w-full h-full"
+							src="https://image.tmdb.org/t/p/w400{movie.poster_path}"
+							alt="poster"
+						/>
+					{:else}
+						<img
+							class="object-cover w-full h-full"
+							src="https://fakeimg.pl/300x500/323232/ffffff?text=No+poster&font=bebas"
+							alt="poster"
+						/>
+					{/if}
 					{#if movie.adult}
 						<div
 							class="cursor-default absolute top-5 right-5 z-10 badge variant-filled text-[1em] !text-white !bg-rose-500"
