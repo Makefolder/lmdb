@@ -3,13 +3,8 @@
 	import type { Movie } from '../../types/movie';
 	import { onMount } from 'svelte';
 
-	let movies: Movie[] = [];
 	export let data;
-
-	let error: string | null = null;
-	// let page: number = 1; use for infinite scroll in case
-	// user's got hella movies
-	let loading: boolean = false;
+	let movies: Movie[] = [];
 	let saved = true;
 
 	onMount(() => {
@@ -36,14 +31,7 @@
 </div>
 
 <div class="mt-[2rem] card__container flex flex-wrap gap-[0.7rem] justify-start mx-auto max-w-full">
-	{#if error !== null}
-		<div>Internal error</div>
-	{:else}
-		{#each movies as movie}
-			<Card {saved} {movie} />
-		{/each}
-	{/if}
-	{#if loading}
-		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Loading...</div>
-	{/if}
+	{#each movies as movie}
+		<Card {saved} {movie} />
+	{/each}
 </div>

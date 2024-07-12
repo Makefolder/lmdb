@@ -1,3 +1,5 @@
+![banner](./banner.png)
+
 # 💻 Portfolio website
 
 <div align="center">

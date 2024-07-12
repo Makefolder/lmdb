@@ -151,6 +151,14 @@
 						{#if movie.tagline.length !== 0}
 							<div>Гасло: <i>{movie.tagline}</i></div>
 						{/if}
+						{#if movie.homepage !== ''}
+							<div class="flex flex-wrap">
+								<div class="mr-2">Вебсайт:</div>
+								<div>
+									<a class="text-secondary-500" href={movie.homepage} target="_blank">лінк</a>
+								</div>
+							</div>
+						{/if}
 						<div>Рейтинґ: {movie.vote_average.toFixed(1)}</div>
 						<div>Статус: {movie.status}</div>
 						{#if movie.origin_country.length !== 0}
