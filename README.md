@@ -1,4 +1,4 @@
-![banner](./banner.png)
+![banner](https://github.com/user-attachments/assets/1d1d94a0-785f-4c55-9938-b8feb2ed2f11)
 
 # 💻 Portfolio website
 
