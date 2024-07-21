@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
 	import Card from '../../components/Card.svelte';
 	import type { Movie } from '../../types/movie';
 	import type { ApiResponse } from '../../types/response';
+
+	const addr = import.meta.env.VITE_LOCAL_ADDR;
 
 	let value;
 	let movies: Movie[] = [];
@@ -20,7 +21,7 @@
 	let interval: NodeJS.Timeout;
 
 	async function fetchSearch(title: string) {
-		const res = await fetch('http://192.168.68.111:3001/api/v1/movie/s/' + title + '/1');
+		const res = await fetch(`${addr}/movie/s/${title}/1`);
 		const data: ApiResponse = await res.json();
 		return {
 			post: {
@@ -45,7 +46,7 @@
 		if (loading) return;
 		loading = true;
 		try {
-			const response = await fetch('http://192.168.68.111:3001/api/v1/movie/discover/1');
+			const response = await fetch(`${addr}/movie/discover/1`);
 			const data: ApiResponse = await response.json();
 			if (data.message === 'success') {
 				movies = [...movies, ...data.data.results];

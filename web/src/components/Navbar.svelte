@@ -9,7 +9,7 @@
 
 <nav class="px-3">
 	<div class="flex items-center">
-		<a href="/">
+		<a data-sveltekit-reload href="/">
 			<div class="flex items-center">
 				{#if logo !== undefined}
 					<div class="max-w-8 max-h-8 mr-2 overflow-hidden">
@@ -27,7 +27,7 @@
 	<div class="flex items-center">
 		{#each links as link}
 			<div>
-				<a class="nav__button {link.colour}" href={link.url}>{link.title}</a>
+				<a data-sveltekit-reload class="nav__button {link.colour}" href={link.url}>{link.title}</a>
 			</div>
 		{/each}
 	</div>
@@ -42,7 +42,6 @@
 		border-radius: 1rem;
 		border: 1px solid rgba(255, 255, 255, 0.15);
 		background: rgba(var(--color-surface-500) / 0.25);
-		backdrop-filter: blur(10px);
 	}
 	.nav__logo span {
 		color: rgb(var(--color-primary-500));

@@ -20,14 +20,12 @@
 
 	const nextImage = () => {
 		console.log(currentIndex);
-		// scrollToImage((currentIndex + 1) % images.length);
-		scrollToImage(images.length);
+		scrollToImage((currentIndex + 1) % images.length);
 	};
 
 	const prevImage = () => {
 		console.log(currentIndex);
-		// scrollToImage((currentIndex - 1 + images.length) % images.length);
-		scrollToImage(0);
+		scrollToImage((currentIndex - 1 + images.length) % images.length);
 	};
 
 	const handleScroll = () => {
@@ -45,7 +43,7 @@
 		on:scroll={handleScroll}
 		class="flex overflow-x-auto gap-6 snap-x snap-mandatory before:shrink-0 before:w-[30vw] after:shrink-0 after:w-[30vw]"
 	>
-		{#each images as image, index}
+		{#each images as image}
 			<li class="shrink-0 snap-center max-w-[48rem]" transition:fade>
 				<img
 					class="w-full h-full object-contain"
@@ -55,10 +53,12 @@
 			</li>
 		{/each}
 	</ul>
-	<button class="btn variant-filled absolute top-[44%] left-[1rem] z-10" on:click={prevImage}>
-		&#9664;
-	</button>
-	<button class="btn variant-filled absolute top-[44%] right-[1rem] z-10" on:click={nextImage}>
-		&#9654;
-	</button>
+	{#if images.length > 1}
+		<button class="btn variant-filled absolute top-[44%] left-[1rem] z-10" on:click={prevImage}>
+			&#9664;
+		</button>
+		<button class="btn variant-filled absolute top-[44%] right-[1rem] z-10" on:click={nextImage}>
+			&#9654;
+		</button>
+	{/if}
 </div>

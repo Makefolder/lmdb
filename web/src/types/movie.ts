@@ -15,7 +15,7 @@ export type Movie = {
 };
 
 export type MovieDetails = {
-	primary_key: number;
+	saved: boolean;
 	adult: boolean;
 	backdrop_path: string;
 	budget: number;
@@ -62,4 +62,31 @@ export type MovieDetails = {
 	video: boolean;
 	vote_average: number;
 	vote_count: number;
+	credits: {
+		cast: Array<{
+			id: number;
+			adult: boolean;
+			known_for_department: string;
+			name: string;
+			original_name: string;
+			popularity: number;
+			profile_path: string;
+			cast_id: number;
+			character: string;
+			credit_id: string;
+			order: number;
+		}>;
+		crew: Array<{
+			id: number;
+			adult: boolean;
+			known_for_department: string;
+			name: string;
+			original_name: string;
+			popularity: number;
+			profile_path: string;
+			credit_id: string;
+			department: string;
+			job: string;
+		}>;
+	};
 };

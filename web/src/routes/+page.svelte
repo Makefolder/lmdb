@@ -9,11 +9,13 @@
 	let page: number = 1;
 	let loading: boolean = false;
 
+	const addr = import.meta.env.VITE_LOCAL_ADDR;
+
 	const fetchData = async () => {
 		if (loading) return;
 		loading = true;
 		try {
-			const response = await fetch('http://192.168.68.111:3001/api/v1/movie/discover/' + page);
+			const response = await fetch(`${addr}/movie/discover/${page}`);
 			const data: ApiResponse = await response.json();
 			if (data.message === 'success') {
 				movies = [...movies, ...data.data.results];

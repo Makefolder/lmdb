@@ -5,112 +5,29 @@
 	import Images from '../../../components/movie/Images.svelte';
 	import Videos from '../../../components/movie/Videos.svelte';
 	import type { Movie, MovieDetails } from '../../../types/movie';
-	import type { ApiDetailedResponse } from '../../../types/response';
-	import { onMount, onDestroy } from 'svelte';
-	import { page } from '$app/stores';
+	import type { Image } from '../../../types/image';
+	import type { Video } from '../../../types/video';
+	import { onMount } from 'svelte';
 
 	export let data;
-	let movie: MovieDetails = {
-		primary_key: 0,
-		adult: false,
-		backdrop_path: '',
-		budget: 0,
-		belongs_to_collection: {
-			id: 0,
-			name: '',
-			poster_path: '',
-			backdrop_path: ''
-		},
-		genres: [
-			{
-				id: 0,
-				name: ''
-			}
-		],
-		homepage: '',
-		id: 0,
-		imdb_id: '',
-		origin_country: [''],
-		original_language: '',
-		original_title: '',
-		overview: '',
-		popularity: 0,
-		poster_path: '',
-		production_companies: [
-			{
-				id: 0,
-				logo_path: '',
-				name: '',
-				origin_country: ''
-			}
-		],
-		production_countries: [
-			{
-				iso_3166_1: '',
-				name: ''
-			}
-		],
-		release_date: '',
-		revenue: 0,
-		runtime: 0,
-		spoken_languages: [
-			{
-				english_name: '',
-				iso_639_1: '',
-				name: ''
-			}
-		],
-		status: '',
-		tagline: '',
-		title: '',
-		video: false,
-		vote_average: 0,
-		vote_count: 0
-	};
+	let movie: MovieDetails = data.post.page;
 
-	let similars: Movie[] = data.post.similar;
-	const id: string = $page.params.movieId;
-	let error: string | null = null;
-	let loading: boolean = false;
-	let interval: NodeJS.Timeout;
-
-	const fetchData = async () => {
-		if (loading) return;
-		loading = true;
-		try {
-			const response = await fetch('http://192.168.68.111:3001/api/v1/movie/i/' + id);
-			const data: ApiDetailedResponse = await response.json();
-			if (data.message === 'success') {
-				movie = data.data;
-			} else {
-				error = 'Failed to fetch movies.';
-			}
-		} catch (err) {
-			console.log(err);
-			error = 'Internal error occured';
-		} finally {
-			loading = false;
-		}
-	};
-
-	const characters: string[] = ['', '.', '..', '...'];
-	let index: number = 0;
-	let date: string = '';
-	let currentChar: string = characters[index];
-	const updateCharacter = () => {
-		index = (index + 1) % characters.length;
-		currentChar = characters[index];
-	};
+	let similars: Movie[] = [];
+	let images: Image[] = [];
+	let videos: Video[] = [];
+	let date: string = data.post.date;
 
 	onMount(() => {
-		interval = setInterval(updateCharacter, 500);
-		fetchData().then(() => {
-			const dateArr: string[] = movie.release_date.split('-');
-			let day: string = dateArr[2];
-			if (dateArr[2].charAt(0) === '0') {
-				day = dateArr[2].charAt(1);
-			}
-			date = `${day} ${data.post.convMonth(dateArr[1])} ${dateArr[0]}`;
+		data.post.similar.then((data) => {
+			similars = data;
+		});
+
+		data.post.images.then((data) => {
+			images = data;
+		});
+
+		data.post.videos.then((data) => {
+			videos = data.results;
 		});
 
 		const body = document.body;
@@ -121,10 +38,6 @@
 			body.style.backgroundImage = '';
 		};
 	});
-
-	onDestroy(() => {
-		clearInterval(interval);
-	});
 </script>
 
 <svelte:head>
@@ -132,87 +45,107 @@
 </svelte:head>
 
 <div>
-	{#if error !== null}
-		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Сталася помилка (500)</div>
-	{:else}
-		<div class="flex mt-9">
-			<PageInfo
-				id={movie.id}
-				adult={movie.adult}
-				poster_path={movie.poster_path}
-				overview={movie.overview}
-				saved={false}
-			/>
+	<div class="flex mt-9">
+		<PageInfo
+			id={movie.id}
+			saved={movie.saved}
+			adult={movie.adult}
+			poster_path={movie.poster_path}
+			overview={movie.overview}
+		/>
 
-			<div class="right__side ml-5 pt-3 pl-3 rounded-2xl flex-grow-0 overflow-hidden w-full">
-				<div class="flex flex-wrap justify-between gap-[1.3rem] leading-7">
-					<div class="h-full text-[1.2em]">
-						<div class="h2 font-semibold mb-2">{movie.title}</div>
-						<div class="h3 text-surface-400/80 mb-3">{movie.original_title}</div>
-						{#if movie.tagline.length !== 0}
-							<div>Гасло: <i>{movie.tagline}</i></div>
-						{/if}
-						{#if movie.homepage !== ''}
-							<div class="flex flex-wrap">
-								<div class="mr-2">Вебсайт:</div>
-								<div>
-									<a class="text-secondary-500" href={movie.homepage} target="_blank">лінк</a>
-								</div>
-							</div>
-						{/if}
-						<div>Рейтинґ: {movie.vote_average.toFixed(1)}</div>
-						<div>Статус: {movie.status}</div>
-						{#if movie.origin_country.length !== 0}
-							<div class="flex flex-wrap">
-								{#if movie.origin_country.length === 1}
-									<div class="mr-2">Країна:</div>
-								{:else}
-									<div class="mr-2">Країни:</div>
-								{/if}
-								{#each movie.production_countries as country}
-									<div class="mr-2">
-										<a class="hover:text-primary-500 transition" href="/genre/{country.iso_3166_1}"
-											>{country.name}</a
-										>
-									</div>
-								{/each}
-							</div>
-						{/if}
-						<div>Дата виходу: {date}</div>
+		<div class="right__side ml-5 pt-3 pl-3 rounded-2xl flex-grow-0 overflow-hidden w-full">
+			<div class="flex flex-wrap justify-between gap-[1.3rem] leading-7">
+				<div class="h-full text-[1.2em] max-w-[40rem]">
+					<div class="h2 font-semibold mb-2">{movie.title}</div>
+					<div class="h3 text-surface-400/80 mb-3">{movie.original_title}</div>
+					<div>Рейтинґ: {movie.vote_average.toFixed(1)}</div>
+					{#if movie.tagline.length !== 0}
+						<div>Гасло: <i>{movie.tagline}</i></div>
+					{/if}
+					<div>Дата виходу: {date}</div>
+					{#if movie.homepage !== ''}
 						<div class="flex flex-wrap">
-							<div class="mr-2">Жанри:</div>
-							{#each movie.genres as genre}
+							<div class="mr-2">Вебсайт:</div>
+							<div>
+								<a class="text-secondary-500" href={movie.homepage} target="_blank">лінк</a>
+							</div>
+						</div>
+					{/if}
+
+					<!-- <div class="my-3 flex flew-wrap">
+							<div class="mr-2">Продюсер(и):</div>
+							{#if movie.credits.crew.length > 0}
+								{#each movie.credits.crew as fella}
+									{#if fella.job == 'Producer'}
+										<div class="mr-4 relative">
+											<a class="hover:text-primary-500 transition" href="/{fella.id}"
+												>{fella.original_name}</a
+											>
+										</div>
+									{/if}
+								{/each}
+							{/if}
+						</div> -->
+
+					<!-- <div class="mb-3 mr-2 flex flex-wrap relative">
+							<span class="mr-2">Актори:</span>
+							{#each movie.credits.cast.slice(0, 7) as fella}
+								<a
+									class="mr-4 hover:text-primary-500 transition"
+									on:mouseover={printPoster(fella.profile_path)}
+									on:mouseout={printPoster(null)}
+									href="/{fella.id}">{fella.original_name}</a
+								>
+							{/each}
+							<div id="actorPoster" class="absolute top-[130%] left-0 z-10 h-[18rem]">
+								<img class="w-full h-full object-contain" src="../../../poster.jpg" alt="" />
+							</div>
+						</div> -->
+
+					<div>Статус: {movie.status}</div>
+					{#if movie.origin_country.length !== 0}
+						<div class="flex flex-wrap">
+							{#if movie.origin_country.length === 1}
+								<div class="mr-2">Країна:</div>
+							{:else}
+								<div class="mr-2">Країни:</div>
+							{/if}
+							{#each movie.production_countries as country}
 								<div class="mr-2">
-									<a class="hover:text-primary-500 transition" href="/genre/{genre.id}"
-										>{genre.name}</a
+									<a class="hover:text-primary-500 transition" href="/genre/{country.iso_3166_1}"
+										>{country.name}</a
 									>
 								</div>
 							{/each}
 						</div>
-					</div>
-					<div class="h-full">
-						<div class="h2 font-semibold mb-5 text-right mr-4">Кіностудії</div>
-						{#each movie.production_companies as company}
-							<Studio
-								icon={company.logo_path}
-								name={company.name}
-								country={company.origin_country}
-							/>
+					{/if}
+					<div class="flex flex-wrap">
+						<div class="mr-2">Жанри:</div>
+						{#each movie.genres as genre}
+							<div class="mr-2">
+								<a class="hover:text-primary-500 transition" href="/genre/{genre.id}"
+									>{genre.name}</a
+								>
+							</div>
 						{/each}
 					</div>
 				</div>
-				{#if data.post.images.backdrops.length !== 0}
-					<Images images={data.post.images.backdrops} />
-				{/if}
-				{#if data.post.videos.length !== 0}
-					<hr class="my-5" />
-					<Videos videos={data.post.videos} />
-				{/if}
+				<div class="h-full">
+					<div class="h2 font-semibold mb-5 text-right mr-4">Кіностудії</div>
+					{#each movie.production_companies as company}
+						<Studio icon={company.logo_path} name={company.name} country={company.origin_country} />
+					{/each}
+				</div>
 			</div>
+			{#if images.length !== 0}
+				<Images {images} />
+			{/if}
+			{#if videos.length !== 0}
+				<hr class="my-5" />
+				<Videos {videos} />
+			{/if}
 		</div>
-		<Similar movies={similars} />
-	{/if}
-	{#if loading}
-		<div class="w-full text-center font-bold text-[3rem] py-[6rem]">Завантаження{currentChar}</div>
-	{/if}
+	</div>
+	<Similar movies={similars} />
 </div>

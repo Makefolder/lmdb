@@ -11,7 +11,7 @@
 	let logo: string = '../../favicon.png';
 
 	let repo: Link = {
-		url: 'https://github.com/aegislash525',
+		url: 'https://github.com/aegislash525/lmdb',
 		title: '/оупен сурс',
 		colour: Colour.Grey
 	};

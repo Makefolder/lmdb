@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/aegislash525/lmdb/database"
+	"github.com/aegislash525/lmdb/internal/repositories"
 	"github.com/aegislash525/lmdb/internal/types"
 	"github.com/aegislash525/lmdb/pkg/responses"
 	"github.com/aegislash525/lmdb/pkg/utils"
@@ -65,7 +66,7 @@ func discoverLogic(key string, url string) utils.Map {
 func Details(id int, lang string) utils.Map {
 	var body types.MovieDetails
 	url := fmt.Sprintf(
-		"https://api.themoviedb.org/3/movie/%d?api_key=%s&language=%s",
+		"https://api.themoviedb.org/3/movie/%d?append_to_response=credits&api_key=%s&language=%s",
 		id, os.Getenv("API_KEY"), lang)
 
 	key := fmt.Sprintf("movie_details_%d", id)
@@ -80,10 +81,11 @@ func Details(id int, lang string) utils.Map {
 		return responses.InternalErr
 	}
 	if len(body.Overview) == 0 && lang != "en-US" {
-		log.Println("changing language...")
 		database.Client.Del(context.Background(), key)
 		return Details(id, "en-US")
 	}
+	isSaved := repositories.IsSaved(id)
+	body.Saved = isSaved
 	return responses.SuccessData(body)
 }
 

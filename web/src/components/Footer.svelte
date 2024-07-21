@@ -7,7 +7,7 @@
 </script>
 
 <footer
-	class="rounded-t-2xl bg-surface-800/40 backdrop-blur-md mt-[6rem] border-t-[1px] border-x-[1px] border-surface-500/50 px-3 py-[1.25rem] mx-auto"
+	class="rounded-t-2xl bg-surface-800/40 mt-[6rem] border-t-[1px] border-x-[1px] border-surface-500/50 px-3 py-[1.25rem] mx-auto"
 >
 	<div class="flex justify-between">
 		<div class="max-w-fit">

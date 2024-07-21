@@ -28,3 +28,12 @@ func Delete(id int) error {
 	}
 	return database.DB.Unscoped().Delete(&record).Error
 }
+
+func IsSaved(id int) bool {
+	var record types.MovieID
+	err := database.DB.Where("movie_id = ?", id).First(&record).Error
+	if err != nil {
+		return false
+	}
+	return true
+}

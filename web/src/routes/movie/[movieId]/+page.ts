@@ -1,10 +1,12 @@
-import type { ApiVideoResponse, ApiResponse } from '../../../types/response';
+import type { ApiDetailedResponse, ApiVideoResponse, ApiResponse } from '../../../types/response';
 import type { ImageResponse } from '../../../types/image';
+
+const addr = import.meta.env.VITE_LOCAL_ADDR;
 
 const convertMonth = (month: string): string => {
 	const num: number = +month;
 	const months = [
-		'Січеня',
+		'Січня',
 		'Лютого',
 		'Березня',
 		'Квітня',
@@ -25,32 +27,47 @@ const convertCountry = (code: string): string => {
 	return '' + name.of(code);
 };
 
+const fetchData = async (id: string) => {
+	const response = await fetch(`${addr}/movie/i/${id}`);
+	const data: ApiDetailedResponse = await response.json();
+	return data.data;
+};
+
+const fetchVideos = async (id: string) => {
+	const response = await fetch(`${addr}/movie/i/${id}/videos`);
+	const data: ApiVideoResponse = await response.json();
+	return data.data;
+};
+
+const fetchImages = async (id: string) => {
+	const response = await fetch(`${addr}/movie/i/${id}/images`);
+	const data: ImageResponse = await response.json();
+	return data.backdrops;
+};
+
+const fetchSimilars = async (id: string) => {
+	const response = await fetch(`${addr}/movie/i/${id}/similar`);
+	const data: ApiResponse = await response.json();
+	return data.data.results;
+};
+
 export const load = async ({ params }) => {
-	// fetch videos
-	const responseVideos = await fetch(
-		'http://192.168.68.111:3001/api/v1/movie/i/' + params.movieId + '/videos'
-	);
-	const dataVideos: ApiVideoResponse = await responseVideos.json();
-	const resultsVideos = dataVideos.data.results;
+	const info = await fetchData(params.movieId);
 
-	// fetch images
-	const responseImages = await fetch(
-		'http://192.168.68.111:3001/api/v1/movie/i/' + params.movieId + '/images'
-	);
-	const dataImages: ImageResponse = await responseImages.json();
-	const resultsImages = dataImages.data;
+	const dateArr: string[] = info.release_date.split('-');
+	let day: string = dateArr[2];
+	if (dateArr[2].charAt(0) === '0') {
+		day = dateArr[2].charAt(1);
+	}
+	const date = `${day} ${convertMonth(dateArr[1])} ${dateArr[0]}`;
 
-	// fetch suggestions
-	const responseSimilar = await fetch(
-		'http://192.168.68.111:3001/api/v1/movie/i/' + params.movieId + '/similar'
-	);
-	const dataSimilar: ApiResponse = await responseSimilar.json();
-	const resultsSimilar = dataSimilar.data.results;
 	return {
 		post: {
-			images: resultsImages,
-			videos: resultsVideos,
-			similar: resultsSimilar,
+			date: date,
+			page: info,
+			images: fetchImages(params.movieId),
+			videos: fetchVideos(params.movieId),
+			similar: fetchSimilars(params.movieId),
 			convMonth: convertMonth,
 			convertCountry: convertCountry
 		}

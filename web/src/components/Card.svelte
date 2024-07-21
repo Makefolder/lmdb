@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
 	import type { Movie } from '../types/movie';
 	export let movie: Movie = {
 		id: 0,
@@ -21,9 +20,10 @@
 	export let width: string = 'w-[22.1rem]';
 	const dateArr: string[] = movie.release_date.split('-');
 	const date: string = `${dateArr[0]}`;
+	const addr = import.meta.env.VITE_LOCAL_ADDR;
 
 	async function remove() {
-		const url = 'http://192.168.68.111:3001/api/v1/r/watchlist/' + movie.id;
+		const url = `${addr}/r/watchlist/${movie.id}`;
 		const response = await fetch(url, {
 			method: 'DELETE',
 			headers: {
@@ -36,8 +36,9 @@
 			saved = false;
 		}
 	}
+
 	async function add() {
-		const url = 'http://192.168.68.111:3001/api/v1/s/watchlist/' + movie.id;
+		const url = `${addr}/s/watchlist/${movie.id}`;
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
@@ -52,11 +53,7 @@
 	}
 </script>
 
-<div
-	id="myCard"
-	class="my-4 card {width} card-hover overflow-hidden"
-	transition:fade={{ duration: 200 }}
->
+<div id="myCard" class="my-4 card {width} card-hover overflow-hidden">
 	<div class="h-full overflow-hidden flex flex-col justify-between">
 		<div>
 			<a data-sveltekit-reload href="/movie/{movie.id}">
@@ -128,8 +125,9 @@
 
 <style>
 	#myCard {
-		background: rgba(var(--color-surface-500) / 0.35);
-		backdrop-filter: blur(10px);
+		background: rgb(var(--color-surface-800));
+		/* background: rgba(var(--color-surface-500) / 0.35); */
+		/* backdrop-filter: blur(10px); */
 	}
 
 	.card-footer {

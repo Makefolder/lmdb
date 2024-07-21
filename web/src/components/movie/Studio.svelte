@@ -34,10 +34,3 @@
 		</div>
 	</a>
 </div>
-
-<style>
-	/* img {
-		filter: brightness(0) saturate(100%) invert(99%) sepia(4%) saturate(246%) hue-rotate(33deg)
-			brightness(114%) contrast(100%);
-	} */
-</style>

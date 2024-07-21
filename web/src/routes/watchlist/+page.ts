@@ -1,11 +1,21 @@
-import type { ApiResponse } from '../../types/request';
+import type { ApiResponse } from '../../types/response';
+import type { Load } from '@sveltejs/kit';
 
-export const load = async () => {
-	const response = await fetch('http://192.168.68.111:3001/api/v1/g/watchlist');
+const addr = import.meta.env.VITE_LOCAL_ADDR;
+
+const randomNum = (max: number) => {
+	return Math.floor(Math.random() * max);
+};
+
+export const load: Load = async () => {
+	const response = await fetch(`${addr}/g/watchlist`);
 	const data: ApiResponse = await response.json();
 	return {
 		post: {
-			data: data
+			get_rand: randomNum
+		},
+		props: {
+			data
 		}
 	};
 };

@@ -6,7 +6,7 @@ type Genre struct {
 }
 
 type MovieDetails struct {
-	PrimaryKey uint    `json:"primary_key" gorm:"primarykey;unique"`
+	Saved      bool    `json:"saved"`
 	Adult      bool    `json:"adult"`
 	Backdrop   string  `json:"backdrop_path"`
 	Budget     float64 `json:"budget"`
@@ -50,4 +50,8 @@ type MovieDetails struct {
 	Video     bool    `json:"video"`
 	VoteAVG   float64 `json:"vote_average"`
 	VoteCount int     `json:"vote_count"`
+	Credits   struct {
+		Cast []Actor `json:"cast"`
+		Crew []Crew  `json:"crew"`
+	} `json:"credits"`
 }

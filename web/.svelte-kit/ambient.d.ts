@@ -26,6 +26,7 @@
  * ```
  */
 declare module '$env/static/private' {
+	export const VITE_LOCAL_ADDR: string;
 	export const MANPATH: string;
 	export const TERM_PROGRAM: string;
 	export const NODE: string;
@@ -107,6 +108,7 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
+		VITE_LOCAL_ADDR: string;
 		MANPATH: string;
 		TERM_PROGRAM: string;
 		NODE: string;
